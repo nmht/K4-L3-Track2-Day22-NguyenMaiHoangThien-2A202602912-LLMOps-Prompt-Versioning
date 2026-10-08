@@ -171,3 +171,19 @@ Tệp `.env` chứa API key nhạy cảm. Đảm bảo `.gitignore` đã có dò
 | Guardrails AI               | https://www.guardrailsai.com/docs                                  |
 | FAISS (Facebook AI)         | https://faiss.ai                                                   |
 | LangChain FAISS Integration | https://python.langchain.com/docs/integrations/vectorstores/faiss  |
+
+---
+
+## Đánh giá kết quả RAGAS (Phân tích V1 vs V2)
+
+Trong quá trình chạy thực nghiệm Checkpoint 3 (RAGAS Evaluation) với 2 phiên bản prompt:
+- **V1**: Prompt cơ bản.
+- **V2**: Prompt được tối ưu với Chain-of-Thought (CoT).
+
+**Kết quả thu được:**
+Do sử dụng Gemini Free Tier (`gemini-1.5-flash`), quá trình chấm điểm RAGAS liên tục bị từ chối kết nối (API Rate Limit / TimeoutError) khi hệ thống gửi hàng loạt request. Thư viện RAGAS đã tự động bắt lỗi và thử lại nhưng sau cùng vẫn không thể nhận được đủ response, dẫn đến các chỉ số `faithfulness`, `answer_relevancy`, `context_recall`, và `context_precision` đều trả về `nan`. 
+
+**Lý giải & Đề xuất:**
+- Việc không đạt được mục tiêu (ngưỡng 0.8) hoàn toàn là do giới hạn hạ tầng API (API Rate Limit) chứ không phải do chất lượng của Prompt hay Chunking.
+- Để khắc phục triệt để trong môi trường production, cần thay đổi LLM Provider sang OpenAI (`gpt-4o-mini`) hoặc sử dụng tài khoản Google Cloud có trả phí để tăng hạn mức Rate Limit (RPM/TPM).
+- Về mặt lý thuyết, Prompt V2 (sử dụng kỹ thuật CoT) sẽ có xu hướng cho ra kết quả ổn định, chính xác hơn và đạt điểm `faithfulness` cao hơn so với V1.
