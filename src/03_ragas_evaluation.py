@@ -66,7 +66,7 @@ def setup_vectorstore():
     """Tái sử dụng — tạo FAISS vectorstore từ knowledge base."""
     embeddings  = get_embeddings()
     text        = load_knowledge_base()
-    chunks      = split_text(text)
+    chunks      = split_text(text, chunk_size=1500, chunk_overlap=100)
     return build_vectorstore(chunks, embeddings)
 
 
@@ -116,7 +116,6 @@ def collect_rag_outputs(vectorstore, prompt_version: str) -> list:
         # TODO: Gọi run_rag() cho câu hỏi hiện tại
         out = run_rag(retriever, llm, prompt, qa["question"])
 
-        # TODO: Append vào results dict với 4 keys
         results.append({
             "question":  qa["question"],
             "reference": qa["reference"],
@@ -124,6 +123,9 @@ def collect_rag_outputs(vectorstore, prompt_version: str) -> list:
             "contexts":  out["contexts"],        # out["contexts"] — phải là list[str] !
         })
         print(f"  [{i:02d}/50] {qa['question'][:60]}")
+        
+        import time
+        time.sleep(2)  # Nghỉ 2 giây để Google không bị ngợp và ngắt kết nối
 
     return results
 

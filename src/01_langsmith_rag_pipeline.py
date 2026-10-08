@@ -45,8 +45,7 @@ def setup_vectorstore():
     # TODO: Đọc nội dung knowledge base (1 dòng)
     text = load_knowledge_base()
 
-    # TODO: Chia text thành chunks với chunk_size=500, chunk_overlap=50 (1 dòng)
-    chunks = split_text(text, chunk_size=500, chunk_overlap=50)
+    chunks = split_text(text, chunk_size=1500, chunk_overlap=100)
     print(f"📚 Đã chia thành {len(chunks)} chunks")
 
     # TODO: Tạo FAISS vectorstore và trả về (1 dòng)

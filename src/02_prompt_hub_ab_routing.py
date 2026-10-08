@@ -164,7 +164,7 @@ def ask_ab(retriever, llm, prompt, question: str, version: str) -> dict:
 def setup_vectorstore():
     embeddings  = get_embeddings()
     text        = load_knowledge_base()
-    chunks      = split_text(text)
+    chunks      = split_text(text, chunk_size=1500, chunk_overlap=100)
     return build_vectorstore(chunks, embeddings)
 
 
